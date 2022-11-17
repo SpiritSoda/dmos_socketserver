@@ -2,6 +2,7 @@ package com.dmos.dmos_socketserver.config;
 
 import com.dmos.dmos_common.config.DMOSConfig;
 import com.dmos.dmos_common.util.HttpUtil;
+import com.dmos.dmos_server.channel.ChannelCache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -22,4 +23,6 @@ public class WebConfig {
     public DMOSConfig dmosConfig(){
         return new DMOSConfig();
     }
+    @Bean
+    public ChannelCache channelCache() { return new ChannelCache(); }
 }

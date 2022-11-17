@@ -1,10 +1,10 @@
-package com.dmos.dmos_socketserver.server;
+package com.dmos.dmos_socketserver.handler;
 
 import com.dmos.dmos_common.data.ClientConfigDTO;
 import com.dmos.dmos_common.data.ReportDTO;
 import com.dmos.dmos_common.message.Message;
 import com.dmos.dmos_common.message.MessageType;
-import com.dmos.dmos_socketserver.channel.ChannelCache;
+import com.dmos.dmos_server.channel.ChannelCache;
 import com.dmos.dmos_socketserver.util.SocketServerHttpUtil;
 import com.google.gson.Gson;
 import io.netty.channel.Channel;
@@ -18,8 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Slf4j
-@Component
-public class DMOSServerHandler extends ChannelInboundHandlerAdapter {
+public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
     @Autowired
     private SocketServerHttpUtil httpUtil;
     @Autowired
