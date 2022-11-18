@@ -1,26 +1,22 @@
-package com.dmos.dmos_socketserver.util;
+package com.dmos.dmos_socketserver.dmos_socket.util;
 
-import com.dmos.dmos_common.config.DMOSConfig;
-import com.dmos.dmos_common.data.DMOSResponse;
-import com.dmos.dmos_common.data.ReportDTO;
-import com.dmos.dmos_common.util.HttpUtil;
+import com.dmos.dmos_socketserver.dmos_common.config.DMOSConfig;
+import com.dmos.dmos_socketserver.dmos_common.data.DMOSResponse;
+import com.dmos.dmos_socketserver.dmos_common.data.ReportDTO;
+import com.dmos.dmos_socketserver.dmos_common.util.HttpUtil;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
 
 @Component
 public class SocketServerHttpUtil {
-    @Autowired
     private final DMOSConfig dmosConfig;
-    @Autowired
     private final HttpUtil httpUtil;
 
+    @Autowired
     public SocketServerHttpUtil(DMOSConfig dmosConfig, HttpUtil httpUtil) {
         this.dmosConfig = dmosConfig;
         this.httpUtil = httpUtil;

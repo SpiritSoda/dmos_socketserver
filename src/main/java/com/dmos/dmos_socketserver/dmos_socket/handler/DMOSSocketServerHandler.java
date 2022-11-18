@@ -1,11 +1,12 @@
-package com.dmos.dmos_socketserver.handler;
+package com.dmos.dmos_socketserver.dmos_socket.handler;
 
-import com.dmos.dmos_common.data.ClientConfigDTO;
-import com.dmos.dmos_common.data.ReportDTO;
-import com.dmos.dmos_common.message.Message;
-import com.dmos.dmos_common.message.MessageType;
-import com.dmos.dmos_server.channel.ChannelCache;
-import com.dmos.dmos_socketserver.util.SocketServerHttpUtil;
+import com.dmos.dmos_socketserver.dmos_common.data.ClientConfigDTO;
+import com.dmos.dmos_socketserver.dmos_common.data.ReportDTO;
+import com.dmos.dmos_socketserver.dmos_common.message.Message;
+import com.dmos.dmos_socketserver.dmos_common.message.MessageType;
+import com.dmos.dmos_socketserver.dmos_common.util.SpringUtil;
+import com.dmos.dmos_socketserver.dmos_server.channel.ChannelCache;
+import com.dmos.dmos_socketserver.dmos_socket.util.SocketServerHttpUtil;
 import com.google.gson.Gson;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,16 +14,13 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Slf4j
 public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
-    @Autowired
-    private SocketServerHttpUtil httpUtil;
-    @Autowired
-    private ChannelCache channelCache;
+    private SocketServerHttpUtil httpUtil = SpringUtil.getBean(SocketServerHttpUtil.class);;
+    private final ChannelCache channelCache = SpringUtil.getBean(ChannelCache.class);
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.info("通道已建立: {}", ctx.channel().id().asLongText());
@@ -65,7 +63,7 @@ public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("通道 {} 出现异常", ctx.channel().id().asLongText());
-        channelCache.deleteChannel(ctx.channel().id().asLongText());
+//        channelCache.deleteChannel(ctx.channel().id().asLongText());
     }
 
     @Override

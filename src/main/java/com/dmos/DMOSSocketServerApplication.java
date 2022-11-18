@@ -1,8 +1,8 @@
-package com.dmos.dmos_socketserver;
+package com.dmos;
 
-import com.dmos.dmos_common.util.Port;
-import com.dmos.dmos_server.server.DMOSServer;
-import com.dmos.dmos_socketserver.handler.DMOSSocketServerHandler;
+import com.dmos.dmos_socketserver.dmos_common.util.Port;
+import com.dmos.dmos_socketserver.dmos_server.server.DMOSServer;
+import com.dmos.dmos_socketserver.dmos_socket.handler.DMOSSocketServerHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
