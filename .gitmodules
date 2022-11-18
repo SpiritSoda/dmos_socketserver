@@ -4,3 +4,6 @@
 [submodule "src/main/java/com/dmos/dmos_server"]
 	path = src/main/java/com/dmos/dmos_server
 	url = https://github.com/SpiritSoda/dmos_server
+[submodule "src/main/java/com/dmos/dmos_client"]
+	path = src/main/java/com/dmos/dmos_client
+	url = https://github.com/SpiritSoda/dmos_client
