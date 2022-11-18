@@ -1,13 +1,12 @@
 package com.dmos.dmos_socketserver.dmos_socket.handler;
 
-import com.dmos.dmos_socketserver.dmos_common.util.HttpUtil;
+import com.dmos.dmos_common.util.HttpUtil;
 import com.dmos.dmos_socketserver.dmos_client.DMOSClient;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 public class DMOSClientHandler extends ChannelInboundHandlerAdapter {

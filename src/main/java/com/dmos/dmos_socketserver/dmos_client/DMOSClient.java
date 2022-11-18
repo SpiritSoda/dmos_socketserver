@@ -1,7 +1,7 @@
 package com.dmos.dmos_socketserver.dmos_client;
 
-import com.dmos.dmos_socketserver.dmos_common.config.DMOSConfig;
-import com.dmos.dmos_socketserver.dmos_common.util.Port;
+import com.dmos.dmos_common.config.DMOSConfig;
+import com.dmos.dmos_common.util.Port;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;

@@ -1,18 +1,17 @@
 package com.dmos.dmos_socketserver.dmos_socket.handler;
 
-import com.dmos.dmos_socketserver.dmos_common.data.ClientConfigDTO;
-import com.dmos.dmos_socketserver.dmos_common.data.ReportDTO;
-import com.dmos.dmos_socketserver.dmos_common.message.Message;
-import com.dmos.dmos_socketserver.dmos_common.message.MessageType;
-import com.dmos.dmos_socketserver.dmos_common.util.SpringUtil;
-import com.dmos.dmos_socketserver.dmos_server.channel.ChannelCache;
+import com.dmos.dmos_common.data.ClientConfigDTO;
+import com.dmos.dmos_common.data.ReportDTO;
+import com.dmos.dmos_common.message.Message;
+import com.dmos.dmos_common.message.MessageType;
+import com.dmos.dmos_socketserver.bean.SpringUtil;
+import com.dmos.dmos_server.channel.ChannelCache;
 import com.dmos.dmos_socketserver.dmos_socket.util.SocketServerHttpUtil;
 import com.google.gson.Gson;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.dmos.dmos_socketserver.dmos_socket.util;
 
-import com.dmos.dmos_socketserver.dmos_common.config.DMOSConfig;
-import com.dmos.dmos_socketserver.dmos_common.data.DMOSResponse;
-import com.dmos.dmos_socketserver.dmos_common.data.ReportDTO;
-import com.dmos.dmos_socketserver.dmos_common.util.HttpUtil;
+import com.dmos.dmos_common.config.DMOSConfig;
+import com.dmos.dmos_common.data.DMOSResponse;
+import com.dmos.dmos_common.data.ReportDTO;
+import com.dmos.dmos_common.util.HttpUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
