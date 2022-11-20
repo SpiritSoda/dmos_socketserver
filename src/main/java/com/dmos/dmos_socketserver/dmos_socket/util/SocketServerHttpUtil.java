@@ -2,7 +2,7 @@ package com.dmos.dmos_socketserver.dmos_socket.util;
 
 import com.dmos.dmos_common.config.DMOSConfig;
 import com.dmos.dmos_common.data.DMOSResponse;
-import com.dmos.dmos_common.data.ReportDTO;
+import com.dmos.dmos_common.data.ClientReportDTO;
 import com.dmos.dmos_common.util.HttpUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class SocketServerHttpUtil {
         return Integer.parseInt(response.getData().get("id"));
     }
 
-    public int reportState(ReportDTO reportDTO){
+    public int reportState(ClientReportDTO reportDTO){
         String localToken = dmosConfig.getLocalToken();
         String url = dmosConfig.getStorage();
 
