@@ -49,6 +49,7 @@ public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
         }
         else if(message.getType() == MessageType.CLIENT_REPORT){
             ClientReportDTO reportDTO = gson.fromJson(message.getData(), ClientReportDTO.class);
+            reportDTO.setId(serverContext.getChannelHandle(ctx.channel().id().asLongText()).getId());
             httpUtil.reportState(reportDTO);
         }
         else if(message.getType() == MessageType.SERVER_REPORT){
