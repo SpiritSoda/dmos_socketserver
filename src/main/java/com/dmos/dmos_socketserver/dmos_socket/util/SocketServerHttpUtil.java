@@ -36,10 +36,10 @@ public class SocketServerHttpUtil {
         DMOSRequest request = new DMOSRequest();
         request.put("token", verifyToken);
 
-        DMOSResponse response = httpUtil.post(url, "/api/verify", headers, request, restTemplate);
+        DMOSResponse response = httpUtil.post(url, "/api/register/verify", headers, request, restTemplate);
         if(response.getCode() != 0)
             return -1;
-        return Integer.parseInt(response.getData().get("id"));
+        return (Integer) response.getData().get("id");
     }
 
     public int reportState(ClientReportDTO reportDTO){
@@ -52,7 +52,7 @@ public class SocketServerHttpUtil {
         DMOSRequest request = new DMOSRequest();
         request.put("report", reportDTO);
 
-        DMOSResponse response = httpUtil.post(url, "/api/report", headers, request, restTemplate);
+        DMOSResponse response = httpUtil.post(url, "/api/storage/report", headers, request, restTemplate);
         return response.getCode();
     }
 }

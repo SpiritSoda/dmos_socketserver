@@ -29,10 +29,10 @@ public class DMOSSocketClientSide {
         String url = dmosConfig.getStorage();
         HttpHeaders headers = new HttpHeaders();
         headers.add("token", token);
-        DMOSResponse response = httpUtil.post(url, "/api/token", headers, new DMOSRequest(), restTemplate);
-        int id = Integer.parseInt(response.getData().get("id"));
+        DMOSResponse response = httpUtil.post(url, "/api/register/token", headers, new DMOSRequest(), restTemplate);
+        int id = (Integer) response.getData().get("id");
         clientContext.id(id);
-        clientContext.token(response.getData().get("token"));
+        clientContext.token((String) response.getData().get("token"));
 
         DMOSClient client = new DMOSClient(new InetSocketAddress("127.0.0.1", Port.REGISTER_CHANNEL_PORT), new DMOSSocketClientHandler());
         client.connect();
