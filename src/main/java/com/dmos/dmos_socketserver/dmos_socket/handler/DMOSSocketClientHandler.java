@@ -38,7 +38,7 @@ public class DMOSSocketClientHandler extends ChannelInboundHandlerAdapter {
         if(message.getType() == MessageType.CONFIG){
             ConfigDTO configDTO = gson.fromJson(message.getData(), ConfigDTO.class);
             int client = configDTO.getId();
-            serverContext.sendTo(client, configDTO);
+            serverContext.sendTo(client, message);
         }
     }
     @Override

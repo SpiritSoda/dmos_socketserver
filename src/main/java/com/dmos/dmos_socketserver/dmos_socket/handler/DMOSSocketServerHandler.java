@@ -55,7 +55,7 @@ public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
         else if(message.getType() == MessageType.SERVER_REPORT){
             ServerReportDTO reportDTO = gson.fromJson(message.getData(), ServerReportDTO.class);
             serverContext.report(reportDTO);
-            clientContext.send(reportDTO);
+            clientContext.send(message);
         }
     }
     @Override

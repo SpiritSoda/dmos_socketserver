@@ -4,19 +4,25 @@ import com.dmos.dmos_client.DMOSClientContext;
 import com.dmos.dmos_common.config.DMOSConfig;
 import com.dmos.dmos_common.data.DMOSRequest;
 import com.dmos.dmos_common.data.DMOSResponse;
+import com.dmos.dmos_common.data.NodeDTO;
+import com.dmos.dmos_common.data.NodeType;
+import com.dmos.dmos_common.util.ConfigUtil;
 import com.dmos.dmos_common.util.HttpUtil;
 import com.dmos.dmos_common.util.Port;
 import com.dmos.dmos_client.DMOSClient;
 import com.dmos.dmos_socketserver.bean.SpringUtil;
 import com.dmos.dmos_socketserver.dmos_socket.handler.DMOSSocketClientHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 
 @Component
+@Slf4j
 public class DMOSSocketClient {
     private final HttpUtil httpUtil = SpringUtil.getBean(HttpUtil.class);
     private final DMOSConfig dmosConfig = SpringUtil.getBean(DMOSConfig.class);
@@ -44,6 +50,25 @@ public class DMOSSocketClient {
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("token", token);
                 DMOSResponse response = httpUtil.post(url, "/api/register/token", headers, new DMOSRequest(), restTemplate);
+                if(response.getCode() != 0){
+                    log.info("注册机器中");
+                    DMOSRequest request = new DMOSRequest();
+                    NodeDTO nodeDTO = new NodeDTO();
+                    nodeDTO.setInterval(10000);
+                    nodeDTO.setType(NodeType.SERVER);
+                    request.put("info", nodeDTO);
+                    DMOSResponse register = httpUtil.post(url, "/api/register/register", headers, request, restTemplate);
+                    if(register.getCode() != 0){
+                        log.error("无法获取token");
+                        return;
+                    }
+                    token = (String) register.getData().get("token");
+                    log.info(token);
+                    dmosConfig.setLocalToken(token);
+                    ConfigUtil.save(dmosConfig, "config.json");
+                    headers.set("token", token);
+                }
+                response = httpUtil.post(url, "/api/register/token", headers, new DMOSRequest(), restTemplate);
                 int id = (Integer) response.getData().get("id");
                 clientContext.id(id);
                 clientContext.token((String) response.getData().get("token"));
