@@ -1,20 +1,30 @@
 package com.dmos.dmos_socketserver.dmos_socket.component;
 
+import com.dmos.dmos_client.DMOSClientContext;
+import com.dmos.dmos_common.data.ServerReportDTO;
 import com.dmos.dmos_common.util.Port;
 import com.dmos.dmos_server.DMOSServer;
+import com.dmos.dmos_server.DMOSServerContext;
+import com.dmos.dmos_socketserver.bean.SpringUtil;
 import com.dmos.dmos_socketserver.dmos_socket.config.ThreadPoolTaskConfig;
 import com.dmos.dmos_socketserver.dmos_socket.handler.DMOSSocketServerHandler;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.net.InetSocketAddress;
+import java.util.stream.Collectors;
 
 @Component
-public class DMOSPoolRSocketServer {
+@Slf4j
+public class DMOSPoolSocketServer {
+    private final DMOSServerContext serverContext = SpringUtil.getBean(DMOSServerContext.class);
+    private final DMOSClientContext clientContext = SpringUtil.getBean(DMOSClientContext.class);
     @Resource
     private ThreadPoolTaskConfig poolTaskExecutor;
-    private static DMOSPoolRSocketServer single = null;
+    private static DMOSPoolSocketServer single = null;
 
     private DMOSServer server;
 
@@ -25,7 +35,7 @@ public class DMOSPoolRSocketServer {
         // 初使化时将已静态化的testService实例化
     }
 
-    public static DMOSPoolRSocketServer getSingle(){
+    public static DMOSPoolSocketServer getSingle(){
         return single;
     }
 
@@ -50,5 +60,20 @@ public class DMOSPoolRSocketServer {
     public boolean getIsRunning(){
         if(server == null){return false;}
         return  server.isRunning;
+    }
+    @Scheduled(fixedRate = 60000)
+    public void checkHeartbeat() throws InterruptedException {
+        log.info("正在检查心跳");
+        serverContext.disconnectTimeout();
+        serverContext.resetHeartbeat();
+    }
+    @Scheduled(fixedRate = 60000)
+    public void reportChild(){
+//        log.info("正在同步子节点信息");
+        ServerReportDTO reportDTO = new ServerReportDTO();
+        reportDTO.setChild(serverContext.getClients().stream().collect(Collectors.toList()));
+        reportDTO.setId(clientContext.getId());
+        reportDTO.setTimestamp(System.currentTimeMillis() / 1000L);
+        clientContext.send(reportDTO);
     }
 }

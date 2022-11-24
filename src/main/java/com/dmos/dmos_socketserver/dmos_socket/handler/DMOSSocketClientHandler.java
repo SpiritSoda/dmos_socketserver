@@ -53,9 +53,4 @@ public class DMOSSocketClientHandler extends ChannelInboundHandlerAdapter {
         clientContext.channel(null);
     }
 
-    @Scheduled(fixedRate = 10000)
-    public void heartbeat() throws InterruptedException {
-        Message message = new Message();
-        message.setType(MessageType.HEARTBEAT);
-    }
 }

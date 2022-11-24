@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.info("子节点通道已建立: {}", ctx.channel().id().asLongText());
         serverContext.saveChannel(ctx.channel());
+
+        reportChild();
     }
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -69,20 +72,15 @@ public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         log.warn("子节点通道 {} 关闭", ctx.channel().id().asLongText());
         serverContext.deleteChannel(ctx.channel().id().asLongText());
-    }
 
-    @Scheduled(fixedRate = 60000)
-    public void checkHeartbeat() throws InterruptedException {
-        log.info("正在检查心跳");
-        serverContext.disconnectTimeout();
-        serverContext.resetHeartbeat();
+        reportChild();
     }
-    @Scheduled(fixedRate = 10000)
     public void reportChild(){
-        log.info("正在同步子节点信息");
+//        log.info("正在同步子节点信息");
         ServerReportDTO reportDTO = new ServerReportDTO();
         reportDTO.setChild(serverContext.getClients().stream().collect(Collectors.toList()));
         reportDTO.setId(clientContext.getId());
+        reportDTO.setTimestamp(System.currentTimeMillis() / 1000L);
         clientContext.send(reportDTO);
     }
 }

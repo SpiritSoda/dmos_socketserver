@@ -6,6 +6,8 @@ import com.dmos.dmos_common.data.DMOSRequest;
 import com.dmos.dmos_common.data.DMOSResponse;
 import com.dmos.dmos_common.data.NodeDTO;
 import com.dmos.dmos_common.data.NodeType;
+import com.dmos.dmos_common.message.Message;
+import com.dmos.dmos_common.message.MessageType;
 import com.dmos.dmos_common.util.ConfigUtil;
 import com.dmos.dmos_common.util.HttpUtil;
 import com.dmos.dmos_common.util.Port;
@@ -14,6 +16,7 @@ import com.dmos.dmos_socketserver.bean.SpringUtil;
 import com.dmos.dmos_socketserver.dmos_socket.handler.DMOSSocketClientHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,26 +52,26 @@ public class DMOSSocketClient {
                 String url = dmosConfig.getStorage();
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("token", token);
-                DMOSResponse response = httpUtil.post(url, "/api/register/token", headers, new DMOSRequest(), restTemplate);
+                DMOSResponse response = httpUtil.post(url, "/register/token", headers, new DMOSRequest(), restTemplate);
                 if(response.getCode() != 0){
-                    log.info("注册机器中");
+                    log.info("token无效，注册机器中");
                     DMOSRequest request = new DMOSRequest();
                     NodeDTO nodeDTO = new NodeDTO();
                     nodeDTO.setInterval(10000);
                     nodeDTO.setType(NodeType.SERVER);
                     request.put("info", nodeDTO);
-                    DMOSResponse register = httpUtil.post(url, "/api/register/register", headers, request, restTemplate);
+                    DMOSResponse register = httpUtil.post(url, "/register/register", headers, request, restTemplate);
                     if(register.getCode() != 0){
                         log.error("无法获取token");
                         return;
                     }
                     token = (String) register.getData().get("token");
-                    log.info(token);
+//                    log.info(token);
                     dmosConfig.setLocalToken(token);
                     ConfigUtil.save(dmosConfig, "config.json");
                     headers.set("token", token);
+                    response = httpUtil.post(url, "/register/token", headers, new DMOSRequest(), restTemplate);
                 }
-                response = httpUtil.post(url, "/api/register/token", headers, new DMOSRequest(), restTemplate);
                 int id = (Integer) response.getData().get("id");
                 clientContext.id(id);
                 clientContext.token((String) response.getData().get("token"));
@@ -77,5 +80,12 @@ public class DMOSSocketClient {
                 client.connect();
             }
         }.start();
+    }
+    @Scheduled(fixedRate = 10000)
+    public void heartbeat() {
+        log.info("正在发送心跳");
+        Message message = new Message();
+        message.setType(MessageType.HEARTBEAT);
+        clientContext.send(message);
     }
 }
