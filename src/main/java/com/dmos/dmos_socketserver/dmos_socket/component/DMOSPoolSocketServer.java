@@ -2,12 +2,16 @@ package com.dmos.dmos_socketserver.dmos_socket.component;
 
 import com.dmos.dmos_client.DMOSClientContext;
 import com.dmos.dmos_common.data.ServerReportDTO;
+import com.dmos.dmos_common.message.Message;
+import com.dmos.dmos_common.message.MessageType;
+import com.dmos.dmos_common.util.ParseUtil;
 import com.dmos.dmos_common.util.Port;
 import com.dmos.dmos_server.DMOSServer;
 import com.dmos.dmos_server.DMOSServerContext;
-import com.dmos.dmos_socketserver.bean.SpringUtil;
+import com.dmos.dmos_socketserver.dmos_socket.bean.SpringUtil;
 import com.dmos.dmos_socketserver.dmos_socket.config.ThreadPoolTaskConfig;
 import com.dmos.dmos_socketserver.dmos_socket.handler.DMOSSocketServerHandler;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -67,13 +71,17 @@ public class DMOSPoolSocketServer {
         serverContext.disconnectTimeout();
         serverContext.resetHeartbeat();
     }
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 45000)
     public void reportChild(){
-//        log.info("正在同步子节点信息");
+        log.info("正在同步子节点信息");
         ServerReportDTO reportDTO = new ServerReportDTO();
         reportDTO.setChild(serverContext.getClients().stream().collect(Collectors.toList()));
         reportDTO.setId(clientContext.getId());
         reportDTO.setTimestamp(System.currentTimeMillis() / 1000L);
-        clientContext.send(reportDTO);
+        Message message = new Message();
+        message.setType(MessageType.SERVER_REPORT);
+        message.setData(ParseUtil.encode(reportDTO, false));
+//        log.info(new Gson().toJson(message));
+        clientContext.send(message);
     }
 }

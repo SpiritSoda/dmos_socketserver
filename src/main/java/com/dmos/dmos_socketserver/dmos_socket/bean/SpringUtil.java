@@ -1,4 +1,4 @@
-package com.dmos.dmos_socketserver.bean;
+package com.dmos.dmos_socketserver.dmos_socket.bean;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

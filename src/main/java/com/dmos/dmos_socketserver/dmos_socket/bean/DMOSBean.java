@@ -1,4 +1,4 @@
-package com.dmos.dmos_socketserver.bean;
+package com.dmos.dmos_socketserver.dmos_socket.bean;
 
 import com.dmos.dmos_client.DMOSClientContext;
 import com.dmos.dmos_common.config.DMOSConfig;

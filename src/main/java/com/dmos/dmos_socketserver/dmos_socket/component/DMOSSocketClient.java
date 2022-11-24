@@ -8,11 +8,12 @@ import com.dmos.dmos_common.data.NodeDTO;
 import com.dmos.dmos_common.data.NodeType;
 import com.dmos.dmos_common.message.Message;
 import com.dmos.dmos_common.message.MessageType;
+import com.dmos.dmos_common.util.ChannelUtil;
 import com.dmos.dmos_common.util.ConfigUtil;
 import com.dmos.dmos_common.util.HttpUtil;
 import com.dmos.dmos_common.util.Port;
 import com.dmos.dmos_client.DMOSClient;
-import com.dmos.dmos_socketserver.bean.SpringUtil;
+import com.dmos.dmos_socketserver.dmos_socket.bean.SpringUtil;
 import com.dmos.dmos_socketserver.dmos_socket.handler.DMOSSocketClientHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
 
 @Component
 @Slf4j
@@ -84,8 +84,6 @@ public class DMOSSocketClient {
     @Scheduled(fixedRate = 10000)
     public void heartbeat() {
         log.info("正在发送心跳");
-        Message message = new Message();
-        message.setType(MessageType.HEARTBEAT);
-        clientContext.send(message);
+        ChannelUtil.heartbeat(clientContext.getParent());
     }
 }
