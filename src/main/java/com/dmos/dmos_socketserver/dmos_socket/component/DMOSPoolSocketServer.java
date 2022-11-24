@@ -82,6 +82,6 @@ public class DMOSPoolSocketServer {
         message.setType(MessageType.SERVER_REPORT);
         message.setData(ParseUtil.encode(reportDTO, false));
 //        log.info(new Gson().toJson(message));
-        clientContext.send(message);
+        clientContext.sendWithoutFlush(message);
     }
 }
