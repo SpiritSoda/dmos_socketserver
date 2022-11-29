@@ -48,36 +48,55 @@ public class DMOSSocketClient {
         new Thread(){
             @Override
             public void run(){
-                String token = dmosConfig.getLocalToken();
-                String url = dmosConfig.getStorage();
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("token", token);
-                DMOSResponse response = httpUtil.post(url, "/register/token", headers, new DMOSRequest(), restTemplate);
-                if(response.getCode() != 0){
-                    log.info("token无效，注册机器中");
-                    DMOSRequest request = new DMOSRequest();
-                    NodeDTO nodeDTO = new NodeDTO();
-                    nodeDTO.setInterval(10000);
-                    nodeDTO.setType(NodeType.SERVER);
-                    request.put("info", nodeDTO);
-                    DMOSResponse register = httpUtil.post(url, "/register/register", headers, request, restTemplate);
-                    if(register.getCode() != 0){
-                        log.error("无法获取token");
-                        return;
-                    }
-                    token = (String) register.getData().get("token");
+                while(true){
+                    try {
+                        String token = dmosConfig.getLocalToken();
+                        String url = dmosConfig.getRegister();
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.add("token", token);
+                        DMOSResponse response = httpUtil.post(url, "/register/token", headers, new DMOSRequest(), restTemplate);
+                        if(response.getCode() != 0){
+                            log.info("token无效，注册机器中");
+                            DMOSRequest request = new DMOSRequest();
+                            NodeDTO nodeDTO = new NodeDTO();
+                            nodeDTO.setInterval(10000);
+                            nodeDTO.setType(NodeType.SERVER);
+                            request.put("info", nodeDTO);
+                            DMOSResponse register = httpUtil.post(url, "/register/register", headers, request, restTemplate);
+                            if(register.getCode() != 0){
+                                log.error("无法获取token");
+                                return;
+                            }
+                            token = (String) register.getData().get("token");
 //                    log.info(token);
-                    dmosConfig.setLocalToken(token);
-                    ConfigUtil.save(dmosConfig, "config.json");
-                    headers.set("token", token);
-                    response = httpUtil.post(url, "/register/token", headers, new DMOSRequest(), restTemplate);
-                }
-                int id = (Integer) response.getData().get("id");
-                clientContext.id(id);
-                clientContext.token((String) response.getData().get("token"));
+                            dmosConfig.setLocalToken(token);
+                            ConfigUtil.save(dmosConfig, "config.json");
+                            headers.set("token", token);
+                            response = httpUtil.post(url, "/register/token", headers, new DMOSRequest(), restTemplate);
+                        }
+                        int id = (Integer) response.getData().get("id");
+                        clientContext.id(id);
+                        clientContext.token((String) response.getData().get("token"));
+                    } catch (Exception e) {
+                        log.error("连接注册服务器出错");
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException ex) {
+                            e.printStackTrace();
+                        }
 
-                DMOSClient client = new DMOSClient(new InetSocketAddress("127.0.0.1", Port.REGISTER_CHANNEL_PORT), new DMOSSocketClientHandler());
-                client.connect();
+                        continue;
+                    }
+
+                    DMOSClient client = new DMOSClient(new InetSocketAddress("127.0.0.1", Port.REGISTER_CHANNEL_PORT), new DMOSSocketClientHandler());
+                    client.connect();
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }.start();
     }

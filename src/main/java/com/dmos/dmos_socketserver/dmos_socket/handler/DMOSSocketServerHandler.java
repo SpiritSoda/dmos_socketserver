@@ -10,6 +10,7 @@ import com.dmos.dmos_common.util.ParseUtil;
 import com.dmos.dmos_socketserver.dmos_socket.bean.SpringUtil;
 import com.dmos.dmos_server.DMOSServerContext;
 import com.dmos.dmos_socketserver.dmos_socket.util.SocketServerHttpUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.stream.Collectors;
 
 @Slf4j
+@ChannelHandler.Sharable
 public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
     private final SocketServerHttpUtil httpUtil = SpringUtil.getBean(SocketServerHttpUtil.class);
     private final DMOSServerContext serverContext = SpringUtil.getBean(DMOSServerContext.class);
@@ -87,6 +89,9 @@ public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
         reportDTO.setId(clientContext.getId());
         reportDTO.setTimestamp(System.currentTimeMillis() / 1000L);
         serverContext.report(reportDTO);
-        clientContext.send(reportDTO);
+        Message message = new Message();
+        message.setType(MessageType.SERVER_REPORT);
+        message.setData(ParseUtil.encode(reportDTO, false));
+        clientContext.send(message);
     }
 }
