@@ -5,6 +5,7 @@ import com.dmos.dmos_common.data.DMOSRequest;
 import com.dmos.dmos_common.data.DMOSResponse;
 import com.dmos.dmos_common.data.ClientReportDTO;
 import com.dmos.dmos_common.util.HttpUtil;
+import com.dmos.dmos_common.util.Port;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +29,7 @@ public class SocketServerHttpUtil {
 
     public int verifyChannel(String verifyToken){
         String localToken = dmosConfig.getLocalToken();
-        String url = dmosConfig.getRegister();
+        String url = dmosConfig.getRegister() + ":" + Port.REGISTER_HTTP_PORT;
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("token", localToken);
@@ -44,7 +45,7 @@ public class SocketServerHttpUtil {
 
     public int reportState(ClientReportDTO reportDTO){
         String localToken = dmosConfig.getLocalToken();
-        String url = dmosConfig.getStorage();
+        String url = dmosConfig.getStorage() + ":" + Port.DATA_SERVER_HTTP_PORT;
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("token", localToken);

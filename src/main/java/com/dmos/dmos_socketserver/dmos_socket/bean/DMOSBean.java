@@ -20,8 +20,10 @@ public class DMOSBean {
     public static DMOSClientContext dmosClientContext() { return new DMOSClientContext(); }
     @Bean
     public static DMOSConfig dmosConfig(){
-
-        return ConfigUtil.load("config.json", DMOSConfig.class);
+        DMOSConfig config = ConfigUtil.load("config.json", DMOSConfig.class);
+        if(config == null)
+            config = new DMOSConfig();
+        return config;
     }
     @ConditionalOnMissingBean(RestTemplate.class)
     @Bean

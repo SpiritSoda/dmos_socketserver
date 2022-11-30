@@ -1,6 +1,7 @@
 package com.dmos.dmos_socketserver.dmos_socket.component;
 
 import com.dmos.dmos_client.DMOSClientContext;
+import com.dmos.dmos_common.config.DMOSConfig;
 import com.dmos.dmos_common.data.ServerReportDTO;
 import com.dmos.dmos_common.message.Message;
 import com.dmos.dmos_common.message.MessageType;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class DMOSPoolSocketServer {
     private final DMOSServerContext serverContext = SpringUtil.getBean(DMOSServerContext.class);
     private final DMOSClientContext clientContext = SpringUtil.getBean(DMOSClientContext.class);
+    private final DMOSConfig dmosConfig = SpringUtil.getBean(DMOSConfig.class);
     @Resource
     private ThreadPoolTaskConfig poolTaskExecutor;
     private static DMOSPoolSocketServer single = null;
@@ -49,7 +51,7 @@ public class DMOSPoolSocketServer {
             public void run() {
                 //启动服务端
                 System.out.println("DMOSPoolRegisterServer当前线程池：" + Thread.currentThread().getName());
-                DMOSServer server = new DMOSServer(new InetSocketAddress("127.0.0.1", Port.SOCKET_CHANNEL_PORT), new DMOSSocketServerHandler());
+                DMOSServer server = new DMOSServer(new InetSocketAddress(dmosConfig.getLocalhost(), Port.SOCKET_CHANNEL_PORT), new DMOSSocketServerHandler());
                 server.start();
             }
         });
