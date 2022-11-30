@@ -44,6 +44,7 @@ public class DMOSSocketClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("父节点通道 {} 出现异常", ctx.channel().id().asLongText());
+        log.error("异常信息 {}", cause.getMessage());
 //        cause.printStackTrace();
     }
 

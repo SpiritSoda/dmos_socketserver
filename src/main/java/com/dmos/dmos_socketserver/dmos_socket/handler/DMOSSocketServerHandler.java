@@ -71,6 +71,7 @@ public class DMOSSocketServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("子节点通道 {} 出现异常", ctx.channel().id().asLongText());
+        log.error("异常信息 {}", cause.getMessage());
 //        channelCache.deleteChannel(ctx.channel().id().asLongText());
 //        cause.printStackTrace();
     }
